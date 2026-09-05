@@ -1,0 +1,20 @@
+# Local development convenience: `docker compose up --build`
+# Serves the API at http://localhost:8000 with the SQLite file persisted
+# in a named volume (so it survives `docker compose down`/rebuilds).
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:////data/exam_allocation.db
+      - SECRET_KEY=${SECRET_KEY:-dev-only-change-me}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:5173}
+      - DEFAULT_ADMIN_USERNAME=${DEFAULT_ADMIN_USERNAME:-admin}
+      - DEFAULT_ADMIN_EMAIL=${DEFAULT_ADMIN_EMAIL:-admin@mapoly.edu.ng}
+      - DEFAULT_ADMIN_PASSWORD=${DEFAULT_ADMIN_PASSWORD:-ChangeMe123!}
+    volumes:
+      - exam_allocation_data:/data
+
+volumes:
+  exam_allocation_data:

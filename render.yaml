@@ -1,0 +1,27 @@
+# Render "Blueprint" for one-click deploy: https://render.com/docs/infrastructure-as-code
+# In the Render dashboard: New -> Blueprint -> point at this repo.
+services:
+  - type: web
+    name: exam-hall-allocator-api
+    runtime: docker
+    plan: free
+    region: oregon
+    branch: main
+    healthCheckPath: /
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:////data/exam_allocation.db
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        value: "https://your-frontend.vercel.app"
+      - key: DEFAULT_ADMIN_USERNAME
+        value: admin
+      - key: DEFAULT_ADMIN_EMAIL
+        value: admin@mapoly.edu.ng
+      - key: DEFAULT_ADMIN_PASSWORD
+        value: ChangeMe123!   # change this in the Render dashboard, then change it again via the app after first login
+    disk:
+      name: exam-allocation-data
+      mountPath: /data
+      sizeGB: 1
